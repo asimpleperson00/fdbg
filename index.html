@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f4ed">
+  <title>Goodwork — people, skills, growth</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f4ed;
+      --surface: #fffefa;
+      --ink: #1f3329;
+      --muted: #79827a;
+      --line: #e6e7de;
+      --green: #27744e;
+      --green-dark: #195c3a;
+      --green-pale: #e9f3e9;
+      --lime: #d7ed79;
+      --coral: #ed8d70;
+      --gold: #e7b94f;
+      --shadow: 0 12px 36px rgba(33, 55, 38, .055);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, select { font: inherit; }
+    button:focus-visible, select:focus-visible {
+      outline: 3px solid #9bc87e;
+      outline-offset: 3px;
+    }
+    .app { max-width: 1440px; margin: 0 auto; min-height: 100vh; }
+    .topbar {
+      height: 72px;
+      padding: 0 5.2%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(31, 51, 41, .09);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 17px; letter-spacing: .1px; }
+    .brand-mark {
+      width: 31px; height: 31px; display: grid; place-items: center;
+      border-radius: 10px 10px 10px 3px; background: var(--green); color: var(--lime);
+      font: 20px Georgia, serif;
+    }
+    .brand-note { color: var(--muted); font-size: 12px; font-weight: 500; }
+    .workspace-tag { color: #59685d; font-size: 12px; display: flex; gap: 8px; align-items: center; }
+    .workspace-tag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #80a75d; }
+    .layout { display: grid; grid-template-columns: 225px minmax(0, 1fr); gap: 48px; padding: 40px 5.2% 64px; }
+    aside { padding-top: 4px; }
+    .eyebrow { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: 1.35px; text-transform: uppercase; }
+    .team-label { margin: 5px 0 18px; font: 24px Georgia, "Times New Roman", serif; }
+    .people-list { display: grid; gap: 5px; }
+    .person-button {
+      display: flex; align-items: center; gap: 11px; width: 100%; padding: 10px 9px;
+      color: var(--ink); background: transparent; border: 0; border-radius: 8px; text-align: left; cursor: pointer;
+    }
+    .person-button:hover { background: rgba(255,255,255,.58); }
+    .person-button[aria-current="true"] { background: var(--surface); box-shadow: 0 3px 12px rgba(28, 51, 37, .055); }
+    .avatar { flex: 0 0 35px; width: 35px; height: 35px; display: grid; place-items: center; border-radius: 50%; font-size: 11px; font-weight: 700; }
+    .person-name { display: block; font-size: 12px; font-weight: 650; }
+    .person-role { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; }
+    .sidebar-rule { border: 0; border-top: 1px solid var(--line); margin: 24px 0 20px; }
+    .sidebar-note { color: var(--muted); font-size: 11px; line-height: 1.65; }
+    main { min-width: 0; }
+    .welcome { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 25px; }
+    h1 { margin: 7px 0 0; font: 38px/1.06 Georgia, "Times New Roman", serif; font-weight: 400; letter-spacing: -.55px; }
+    .welcome-copy { margin: 9px 0 0; color: var(--muted); font-size: 12px; }
+    .date-stamp { color: var(--muted); font-size: 11px; white-space: nowrap; padding-bottom: 4px; }
+    .profile-strip {
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      min-height: 96px; padding: 18px 22px; margin-bottom: 15px;
+      background: var(--surface); border: 1px solid rgba(31, 51, 41, .055); border-radius: 8px; box-shadow: var(--shadow);
+    }
+    .profile-person { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .profile-avatar { flex-basis: 48px; width: 48px; height: 48px; font-size: 13px; }
+    .profile-name { font: 21px Georgia, "Times New Roman", serif; }
+    .profile-meta { margin-top: 4px; color: var(--muted); font-size: 11px; }
+    .role-control { min-width: 195px; }
+    .role-control label { display: block; margin: 0 0 6px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; }
+    select { width: 100%; padding: 9px 30px 9px 10px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: #fffefa; cursor: pointer; font-size: 12px; }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 25px; }
+    .stat { min-height: 108px; padding: 17px 18px; border-radius: 7px; background: var(--surface); border: 1px solid rgba(31,51,41,.05); }
+    .stat-top { display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: 11px; }
+    .stat-icon { color: var(--green); font-size: 15px; }
+    .stat-value { margin-top: 11px; font: 29px/1 Georgia, "Times New Roman", serif; }
+    .stat-caption { margin-top: 6px; color: var(--muted); font-size: 10px; }
+    .stat-match { display: flex; align-items: baseline; gap: 8px; }
+    .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+    h2 { margin: 0; font: 23px Georgia, "Times New Roman", serif; font-weight: 400; }
+    .section-caption { color: var(--muted); font-size: 10px; }
+    .lower-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(285px, .82fr); gap: 15px; align-items: start; }
+    .panel { min-width: 0; padding: 18px; background: var(--surface); border: 1px solid rgba(31,51,41,.055); border-radius: 7px; box-shadow: var(--shadow); }
+    .skill-list { display: grid; gap: 2px; }
+    .skill-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eff0e9; }
+    .skill-row:last-child { border-bottom: 0; padding-bottom: 1px; }
+    .skill-main { min-width: 0; }
+    .skill-title-line { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; }
+    .skill-name { font-size: 12px; font-weight: 650; }
+    .skill-required { color: #8a918a; font-size: 10px; }
+    .progress-track { height: 5px; margin-top: 8px; overflow: hidden; border-radius: 5px; background: #edf0e8; }
+    .progress-fill { height: 100%; border-radius: inherit; background: #76a46d; transition: width .35s ease; }
+    .skill-action { display: grid; justify-items: end; gap: 4px; }
+    .skill-score { color: var(--muted); font-size: 10px; }
+    .practice-button { padding: 6px 8px; white-space: nowrap; border: 1px solid #d7e6d4; border-radius: 5px; color: var(--green-dark); background: #f3f8ef; font-size: 10px; font-weight: 650; cursor: pointer; }
+    .practice-button:hover:not(:disabled) { color: white; background: var(--green); border-color: var(--green); }
+    .practice-button:disabled { cursor: default; opacity: .55; }
+    .board-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+    .board-heading h2 { font-size: 20px; }
+    .board-heading span { color: var(--muted); font-size: 9px; }
+    .leader-row { display: grid; grid-template-columns: 23px minmax(0,1fr) auto; align-items: center; gap: 9px; padding: 12px 0; border-bottom: 1px solid #eff0e9; }
+    .leader-row:last-child { border-bottom: 0; }
+    .rank { color: #a2a99f; font: 14px Georgia, serif; }
+    .rank.first { color: #c28a16; }
+    .leader-name { font-size: 11px; font-weight: 650; }
+    .leader-focus { margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .leader-points { color: var(--green-dark); font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .board-foot { display: flex; align-items: center; gap: 7px; margin-top: 5px; padding: 10px; color: #526951; background: #f0f5e9; border-radius: 5px; font-size: 10px; line-height: 1.45; }
+    .board-foot strong { color: var(--green-dark); }
+    .board-foot-mark { color: var(--green); font-size: 13px; }
+    .toast { position: fixed; right: 24px; bottom: 24px; padding: 12px 16px; color: white; background: var(--green-dark); border-radius: 6px; box-shadow: 0 5px 18px #193d2b33; font-size: 12px; opacity: 0; transform: translateY(7px); transition: .2s ease; pointer-events: none; }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+    .empty-state { padding: 22px 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+
+    @media (min-width: 1200px) { .layout { gap: 58px; } }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 185px minmax(0,1fr); gap: 25px; padding-right: 4%; padding-left: 4%; }
+      .topbar { padding-right: 4%; padding-left: 4%; }
+      .lower-grid { grid-template-columns: minmax(0,1fr); }
+      .leaderboard { order: 2; }
+    }
+    @media (max-width: 620px) {
+      .topbar { height: 62px; }
+      .brand-note, .workspace-tag { display: none; }
+      .layout { display: block; padding: 25px 18px 40px; }
+      aside { margin-bottom: 24px; }
+      .team-label { margin: 3px 0 10px; font-size: 21px; }
+      .people-list { display: flex; overflow-x: auto; gap: 5px; padding-bottom: 3px; }
+      .person-button { flex: 0 0 auto; width: auto; padding: 8px; }
+      .sidebar-rule, .sidebar-note { display: none; }
+      .welcome { align-items: start; margin-bottom: 18px; }
+      h1 { font-size: 32px; }
+      .date-stamp { display: none; }
+      .profile-strip { align-items: flex-start; flex-direction: column; gap: 16px; padding: 16px; }
+      .role-control { width: 100%; }
+      .stats { gap: 8px; margin-bottom: 22px; }
+      .stat { min-height: 94px; padding: 13px 11px; }
+      .stat-top { font-size: 9px; }
+      .stat-value { font-size: 24px; }
+      .stat-caption { font-size: 9px; }
+      .panel { padding: 14px; }
+      .section-heading { align-items: flex-start; }
+      .section-caption { text-align: right; max-width: 110px; line-height: 1.4; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">g</span><span>goodwork</span><span class="brand-note">people, skills, growth</span></div>
+      <div class="workspace-tag">Northstar Studio · Team space</div>
+    </header>
+    <div class="layout">
+      <aside aria-label="Team members">
+        <div class="eyebrow">Your team</div>
+        <div class="team-label">The people</div>
+        <nav class="people-list" id="people-list" aria-label="Choose a teammate"></nav>
+        <hr class="sidebar-rule">
+        <p class="sidebar-note">A good match isn't a perfect checklist. It's a place to start growing together.</p>
+      </aside>
+
+      <main>
+        <div class="welcome">
+          <div><div class="eyebrow">Team development</div><h1>Make room to grow.</h1><p class="welcome-copy">Connect the work people do with the skills they want to build.</p></div>
+          <div class="date-stamp" id="date-stamp"></div>
+        </div>
+
+        <section class="profile-strip" aria-label="Selected teammate and role">
+          <div class="profile-person" id="profile-person"></div>
+          <div class="role-control"><label for="role-select">Explore a role</label><select id="role-select" aria-label="Choose a role to match"></select></div>
+        </section>
+
+        <section class="stats" aria-label="Development dashboard">
+          <div class="stat"><div class="stat-top"><span>Green points</span><span class="stat-icon" aria-hidden="true">✳</span></div><div class="stat-value" id="points-stat">0</div><div class="stat-caption">Earned by making time to grow</div></div>
+          <div class="stat"><div class="stat-top"><span>Role match</span><span class="stat-icon" aria-hidden="true">↗</span></div><div class="stat-value stat-match"><span id="match-stat">0%</span></div><div class="stat-caption" id="match-caption">Skills aligned to this role</div></div>
+          <div class="stat"><div class="stat-top"><span>Skills to build</span><span class="stat-icon" aria-hidden="true">＋</span></div><div class="stat-value" id="gaps-stat">0</div><div class="stat-caption">A few small steps go a long way</div></div>
+        </section>
+
+        <div class="lower-grid">
+          <section aria-labelledby="skills-title">
+            <div class="section-heading"><h2 id="skills-title">A path to the role</h2><span class="section-caption" id="skills-caption"></span></div>
+            <div class="panel"><div class="skill-list" id="skill-list"></div></div>
+          </section>
+          <section class="leaderboard" aria-labelledby="board-title">
+            <div class="section-heading"><h2 id="board-title">Growth leaderboard</h2><span class="section-caption">A little progress adds up</span></div>
+            <div class="panel">
+              <div class="board-heading"><h2>Team momentum</h2><span>RANKED BY GREEN POINTS</span></div>
+              <div id="leader-list"></div>
+              <div class="board-foot" id="board-foot"></div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const roleCatalog = {
+      "Product Designer": { skills: { "User research": 70, "Prototyping": 75, "Visual design": 70, "Communication": 65, "Data storytelling": 55 } },
+      "Product Manager": { skills: { "Product strategy": 75, "Communication": 70, "Data storytelling": 70, "User research": 60, "Facilitation": 65 } },
+      "UX Researcher": { skills: { "User research": 80, "Facilitation": 70, "Data storytelling": 65, "Communication": 65, "Prototyping": 45 } },
+      "Design Lead": { skills: { "Communication": 75, "Facilitation": 75, "Visual design": 70, "Product strategy": 65, "Prototyping": 60 } }
+    };
+
+    const team = [
+      { id: "maya", name: "Maya Chen", title: "Product Designer", initials: "MC", color: "#f1d8c9", role: "Product Designer", points: 120, skills: { "User research": 62, "Prototyping": 58, "Visual design": 82, "Communication": 71, "Data storytelling": 42, "Product strategy": 51, "Facilitation": 55 } },
+      { id: "jules", name: "Jules Rivera", title: "UX Researcher", initials: "JR", color: "#dce6ca", role: "UX Researcher", points: 185, skills: { "User research": 86, "Prototyping": 49, "Visual design": 54, "Communication": 68, "Data storytelling": 63, "Product strategy": 58, "Facilitation": 73 } },
+      { id: "sam", name: "Sam Okafor", title: "Product Manager", initials: "SO", color: "#d8dfed", role: "Product Manager", points: 90, skills: { "User research": 58, "Prototyping": 40, "Visual design": 52, "Communication": 78, "Data storytelling": 55, "Product strategy": 69, "Facilitation": 61 } },
+      { id: "lee", name: "Lee Park", title: "Design Lead", initials: "LP", color: "#e8dfb8", role: "Design Lead", points: 150, skills: { "User research": 64, "Prototyping": 73, "Visual design": 81, "Communication": 61, "Data storytelling": 50, "Product strategy": 63, "Facilitation": 56 } }
+    ];
+
+    const actionBySkill = {
+      "User research": "Run a five-question user interview",
+      "Prototyping": "Build a quick clickable prototype",
+      "Visual design": "Try a new visual direction",
+      "Communication": "Share a short project walkthrough",
+      "Data storytelling": "Turn one insight into a clear story",
+      "Product strategy": "Write a one-page product brief",
+      "Facilitation": "Lead a 15-minute team activity"
+    };
+
+    const savedState = loadState();
+    let selectedId = savedState.selectedId || team[0].id;
+    let toastTimer;
+    const peopleList = document.getElementById("people-list");
+    const roleSelect = document.getElementById("role-select");
+    const skillList = document.getElementById("skill-list");
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("goodwork-state") || "{}");
+        if (saved && typeof saved === "object") {
+          for (const person of team) {
+            if (Number.isFinite(saved.points?.[person.id])) person.points = Math.max(0, saved.points[person.id]);
+            if (saved.skills?.[person.id] && typeof saved.skills[person.id] === "object") {
+              for (const skill of Object.keys(person.skills)) {
+                const score = saved.skills[person.id][skill];
+                if (Number.isFinite(score)) person.skills[skill] = Math.max(0, Math.min(100, score));
+              }
+            }
+            if (typeof saved.roles?.[person.id] === "string" && roleCatalog[saved.roles[person.id]]) person.role = saved.roles[person.id];
+          }
+          return saved;
+        }
+      } catch (error) { /* Start fresh if local storage is unavailable or invalid. */ }
+      return {};
+    }
+
+    function saveState() {
+      const state = {
+        selectedId,
+        points: Object.fromEntries(team.map(person => [person.id, person.points])),
+        roles: Object.fromEntries(team.map(person => [person.id, person.role])),
+        skills: Object.fromEntries(team.map(person => [person.id, person.skills]))
+      };
+      try { localStorage.setItem("goodwork-state", JSON.stringify(state)); } catch (error) { /* Keep the dashboard usable without storage. */ }
+    }
+
+    function selectedPerson() { return team.find(person => person.id === selectedId) || team[0]; }
+    function initialsColor(person) { return `background:${person.color};color:#354238`; }
+    function roleMatch(person, role) {
+      const required = Object.entries(roleCatalog[role].skills);
+      return Math.round(required.reduce((total, [skill]) => total + Math.min(person.skills[skill] || 0, 100), 0) / required.length);
+    }
+    function roleGaps(person, role) {
+      return Object.entries(roleCatalog[role].skills)
+        .map(([skill, target]) => ({ skill, target, score: person.skills[skill] || 0, gap: Math.max(0, target - (person.skills[skill] || 0)) }))
+        .sort((first, second) => second.gap - first.gap);
+    }
+    function renderPeople() {
+      peopleList.innerHTML = team.map(person => `
+        <button class="person-button" type="button" data-person="${person.id}" aria-current="${person.id === selectedId}">
+          <span class="avatar" style="${initialsColor(person)}" aria-hidden="true">${person.initials}</span>
+          <span><span class="person-name">${person.name}</span><span class="person-role">${person.title}</span></span>
+        </button>`).join("");
+    }
+    function renderRoleOptions(person) {
+      roleSelect.innerHTML = Object.keys(roleCatalog).map(role => `<option value="${role}" ${person.role === role ? "selected" : ""}>${role}</option>`).join("");
+    }
+    function renderProfile(person) {
+      document.getElementById("profile-person").innerHTML = `
+        <span class="avatar profile-avatar" style="${initialsColor(person)}" aria-hidden="true">${person.initials}</span>
+        <div><div class="profile-name">${person.name}</div><div class="profile-meta">${person.title} · growing at their own pace</div></div>`;
+    }
+    function renderSkills(person) {
+      const gaps = roleGaps(person, person.role);
+      const visibleGaps = gaps.filter(item => item.gap > 0).slice(0, 4);
+      const skillsToShow = visibleGaps.length ? visibleGaps : gaps.slice(0, 1);
+      document.getElementById("skills-caption").textContent = `Top ${skillsToShow.length} opportunities for ${person.role}`;
+      skillList.innerHTML = skillsToShow.map(item => {
+        const progress = Math.min(100, Math.round(item.score / item.target * 100));
+        const complete = item.score >= item.target;
+        const actionText = actionBySkill[item.skill];
+        return `<div class="skill-row">
+          <div class="skill-main"><div class="skill-title-line"><span class="skill-name">${item.skill}</span><span class="skill-required">Target ${item.target}</span></div>
+            <div class="progress-track" role="progressbar" aria-label="${item.skill} role match" aria-valuenow="${item.score}" aria-valuemin="0" aria-valuemax="${item.target}"><div class="progress-fill" style="width:${progress}%"></div></div></div>
+          <div class="skill-action"><span class="skill-score">${item.score} / ${item.target}</span><button class="practice-button" type="button" data-skill="${item.skill}" ${complete ? "disabled" : ""}>${complete ? "Target reached" : `Practice · +20 GP`}</button></div>
+        </div>${!complete ? `<div class="empty-state" style="padding:0 0 5px;margin-top:-2px">${actionText}</div>` : ""}`;
+      }).join("");
+      document.getElementById("points-stat").textContent = person.points.toLocaleString();
+      document.getElementById("match-stat").textContent = `${roleMatch(person, person.role)}%`;
+      document.getElementById("match-caption").textContent = `Skills aligned to ${person.role}`;
+      document.getElementById("gaps-stat").textContent = gaps.filter(item => item.gap > 0).length;
+    }
+    function renderLeaderboard() {
+      const ranked = [...team].sort((first, second) => second.points - first.points);
+      document.getElementById("leader-list").innerHTML = ranked.map((person, index) => {
+        const nextSkill = roleGaps(person, person.role).find(item => item.gap > 0)?.skill || "Keep sharing your skills";
+        return `<div class="leader-row"><span class="rank ${index === 0 ? "first" : ""}">${String(index + 1).padStart(2, "0")}</span>
+          <span><span class="leader-name">${person.name}</span><span class="leader-focus">Next up: ${nextSkill}</span></span>
+          <span class="leader-points">${person.points} GP</span></div>`;
+      }).join("");
+      const leader = ranked[0];
+      const nextSkill = roleGaps(leader, leader.role).find(item => item.gap > 0)?.skill || "any skill they enjoy";
+      document.getElementById("board-foot").innerHTML = `<span class="board-foot-mark" aria-hidden="true">✳</span><span><strong>${leader.name}'s</strong> next growth focus: <strong>${nextSkill}</strong></span>`;
+    }
+    function render() {
+      const person = selectedPerson();
+      renderPeople();
+      renderRoleOptions(person);
+      renderProfile(person);
+      renderSkills(person);
+      renderLeaderboard();
+    }
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("visible"), 2200);
+    }
+
+    peopleList.addEventListener("click", event => {
+      const button = event.target.closest("[data-person]");
+      if (!button) return;
+      selectedId = button.dataset.person;
+      saveState();
+      render();
+    });
+    roleSelect.addEventListener("change", () => {
+      selectedPerson().role = roleSelect.value;
+      saveState();
+      render();
+    });
+    skillList.addEventListener("click", event => {
+      const button = event.target.closest("[data-skill]");
+      if (!button || button.disabled) return;
+      const person = selectedPerson();
+      const skill = button.dataset.skill;
+      person.points += 20;
+      person.skills[skill] = Math.min(100, person.skills[skill] + 5);
+      saveState();
+      render();
+      showToast(`+20 green points for ${skill}`);
+    });
+
+    document.getElementById("date-stamp").textContent = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" }).format(new Date());
+    render();
+  </script>
+</body>
+</html>
